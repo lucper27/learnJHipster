@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="song">
+      <h2 data-cy="songDetailsHeading"><span jhiTranslate="learnjhipsterApp.song.detail.title">Song</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ song.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.song.title">Title</span></dt>
+        <dd>
+          <span>{{ song.title }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.song.duration">Duration</span></dt>
+        <dd>
+          <span>{{ song.duration }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.song.inclusionDate">Inclusion Date</span></dt>
+        <dd>
+          <span>{{ song.inclusionDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.song.album">Album</span></dt>
+        <dd>
+          <div *ngIf="song.album">
+            <a [routerLink]="['/album', song.album.id, 'view']">{{ song.album.title }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/song', song.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

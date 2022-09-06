@@ -1,0 +1,24 @@
+{
+  "learnjhipsterApp": {
+    "style": {
+      "home": {
+        "title": "Styles",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Style",
+        "createOrEditLabel": "Crear o editar Style",
+        "notFound": "Ningún Styles encontrado"
+      },
+      "created": "Un nuevo Style ha sido creado con el identificador {{ param }}",
+      "updated": "Un Style ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Style ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Style {{ id }}?"
+      },
+      "detail": {
+        "title": "Style"
+      },
+      "id": "ID",
+      "name": "Name"
+    }
+  }
+}

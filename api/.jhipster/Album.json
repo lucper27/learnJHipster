@@ -1,0 +1,46 @@
+{
+  "applications": "*",
+  "changelogDate": "20220905133040",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "album",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "cover",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Album",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "artist",
+      "relationshipName": "artist",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "style",
+      "relationshipName": "style",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "album",
+      "relationshipName": "songs",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

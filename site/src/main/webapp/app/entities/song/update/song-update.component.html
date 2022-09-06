@@ -1,0 +1,118 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-song-heading" data-cy="SongCreateUpdateHeading" jhiTranslate="learnjhipsterApp.song.home.createOrEditLabel">
+        Crear o editar Song
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.song.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          <div *ngIf="editForm.get('title')!.invalid && (editForm.get('title')!.dirty || editForm.get('title')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('title')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.song.duration" for="field_duration">Duration</label>
+          <input type="number" class="form-control" name="duration" id="field_duration" data-cy="duration" formControlName="duration" />
+          <div *ngIf="editForm.get('duration')!.invalid && (editForm.get('duration')!.dirty || editForm.get('duration')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('duration')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('duration')?.errors?.min"
+              jhiTranslate="entity.validation.min"
+              [translateValues]="{ min: 0 }"
+            >
+              Este campo debe ser mayor que 0.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('duration')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.song.inclusionDate" for="field_inclusionDate">Inclusion Date</label>
+          <div class="input-group">
+            <input
+              id="field_inclusionDate"
+              data-cy="inclusionDate"
+              type="text"
+              class="form-control"
+              name="inclusionDate"
+              ngbDatepicker
+              #inclusionDateDp="ngbDatepicker"
+              formControlName="inclusionDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="inclusionDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+          <div
+            *ngIf="
+              editForm.get('inclusionDate')!.invalid && (editForm.get('inclusionDate')!.dirty || editForm.get('inclusionDate')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('inclusionDate')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.song.album" for="field_album">Album</label>
+          <select class="form-control" id="field_album" data-cy="album" name="album" formControlName="album" [compareWith]="compareAlbum">
+            <option *ngIf="editForm.get(['album'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="albumOption" *ngFor="let albumOption of albumsSharedCollection">{{ albumOption.title }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['album'])!.invalid && (editForm.get(['album'])!.dirty || editForm.get(['album'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['album'])?.errors?.required" jhiTranslate="entity.validation.required">
+            Este campo es obligatorio.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<div>
+  <h2 id="page-heading" data-cy="AlbumHeading">
+    <span jhiTranslate="learnjhipsterApp.album.home.title">Albums</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="learnjhipsterApp.album.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-album"
+        [routerLink]="['/album/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="learnjhipsterApp.album.home.createLabel"> Crear nuevo Album </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="albums?.length === 0">
+    <span jhiTranslate="learnjhipsterApp.album.home.notFound">Ningún Albums encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="albums && albums.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="title">
+            <div class="d-flex">
+              <span jhiTranslate="learnjhipsterApp.album.title">Title</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="cover">
+            <div class="d-flex">
+              <span jhiTranslate="learnjhipsterApp.album.cover">Cover</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="artist.name">
+            <div class="d-flex">
+              <span jhiTranslate="learnjhipsterApp.album.artist">Artist</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="style.name">
+            <div class="d-flex">
+              <span jhiTranslate="learnjhipsterApp.album.style">Style</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let album of albums; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/album', album.id, 'view']">{{ album.id }}</a>
+          </td>
+          <td>{{ album.title }}</td>
+          <td>
+            <a *ngIf="album.cover" (click)="openFile(album.cover, album.coverContentType)">
+              <img [src]="'data:' + album.coverContentType + ';base64,' + album.cover" style="max-height: 30px" alt="album image" />
+            </a>
+            <span *ngIf="album.cover">{{ album.coverContentType }}, {{ byteSize(album.cover) }}</span>
+          </td>
+          <td>
+            <div *ngIf="album.artist">
+              <a [routerLink]="['/artist', album.artist.id, 'view']">{{ album.artist.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="album.style">
+              <a [routerLink]="['/style', album.style.id, 'view']">{{ album.style.name }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/song']"
+                [queryParams]="{ 'filter[albumId.in]': album.id }"
+                class="btn btn-info btn-sm"
+                data-cy="filterOtherEntityButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span
+                  class="d-none d-md-inline"
+                  jhiTranslate="entity.action.show"
+                  [translateValues]="{ otherEntity: ('learnjhipsterApp.album.songs' | translate) }"
+                  >Show Song</span
+                >
+              </button>
+              <button type="submit" [routerLink]="['/album', album.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/album', album.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(album)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="albums && albums.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

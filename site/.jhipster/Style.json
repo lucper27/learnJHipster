@@ -1,0 +1,22 @@
+{
+  "applications": "*",
+  "changelogDate": "20220905133202",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "style",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Style",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceImpl"
+}

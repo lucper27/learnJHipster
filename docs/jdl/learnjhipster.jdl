@@ -1,0 +1,38 @@
+
+entity Style {
+	name String required unique maxlength(50)
+}
+
+entity Artist {
+	name String required unique maxlength(100)
+    image ImageBlob 
+}
+
+
+entity Album {
+	title String required
+    cover ImageBlob required
+}
+
+relationship ManyToOne {
+	Album{artist(name)} to Artist
+    Album{style(name)} to Style
+}
+
+entity Song {
+	title String required
+    duration Integer required min(0)
+    inclusionDate LocalDate required
+}
+
+relationship ManyToOne {
+	Song{album(title) required} to Album{songs}
+}
+
+
+paginate all with pagination except Style
+service all with serviceImpl
+dto all with mapstruct
+filter all except Style
+
+

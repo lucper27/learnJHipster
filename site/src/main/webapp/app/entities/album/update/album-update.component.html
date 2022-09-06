@@ -1,0 +1,110 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-album-heading" data-cy="AlbumCreateUpdateHeading" jhiTranslate="learnjhipsterApp.album.home.createOrEditLabel">
+        Crear o editar Album
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.album.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          <div *ngIf="editForm.get('title')!.invalid && (editForm.get('title')!.dirty || editForm.get('title')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('title')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.album.cover" for="field_cover">Cover</label>
+          <div>
+            <img
+              [src]="'data:' + editForm.get('coverContentType')!.value + ';base64,' + editForm.get('cover')!.value"
+              style="max-height: 100px"
+              *ngIf="editForm.get('cover')!.value"
+              alt="album image"
+            />
+            <div *ngIf="editForm.get('cover')!.value" class="form-text text-danger clearfix">
+              <span class="pull-start">{{ editForm.get('coverContentType')!.value }}, {{ byteSize(editForm.get('cover')!.value!) }}</span>
+              <button
+                type="button"
+                (click)="clearInputImage('cover', 'coverContentType', 'file_cover')"
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="file_cover"
+              data-cy="cover"
+              (change)="setFileData($event, 'cover', true)"
+              accept="image/*"
+              jhiTranslate="entity.action.addimage"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="cover" id="field_cover" data-cy="cover" formControlName="cover" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="coverContentType"
+            id="field_coverContentType"
+            formControlName="coverContentType"
+          />
+          <div *ngIf="editForm.get('cover')!.invalid && (editForm.get('cover')!.dirty || editForm.get('cover')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('cover')?.errors?.required" jhiTranslate="entity.validation.required">
+              Este campo es obligatorio.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.album.artist" for="field_artist">Artist</label>
+          <select
+            class="form-control"
+            id="field_artist"
+            data-cy="artist"
+            name="artist"
+            formControlName="artist"
+            [compareWith]="compareArtist"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="artistOption" *ngFor="let artistOption of artistsSharedCollection">{{ artistOption.name }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="learnjhipsterApp.album.style" for="field_style">Style</label>
+          <select class="form-control" id="field_style" data-cy="style" name="style" formControlName="style" [compareWith]="compareStyle">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="styleOption" *ngFor="let styleOption of stylesSharedCollection">{{ styleOption.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="album">
+      <h2 data-cy="albumDetailsHeading"><span jhiTranslate="learnjhipsterApp.album.detail.title">Album</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ album.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.album.title">Title</span></dt>
+        <dd>
+          <span>{{ album.title }}</span>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.album.cover">Cover</span></dt>
+        <dd>
+          <div *ngIf="album.cover">
+            <a (click)="openFile(album.cover, album.coverContentType)">
+              <img [src]="'data:' + album.coverContentType + ';base64,' + album.cover" style="max-width: 100%" alt="album image" />
+            </a>
+            {{ album.coverContentType }}, {{ byteSize(album.cover) }}
+          </div>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.album.artist">Artist</span></dt>
+        <dd>
+          <div *ngIf="album.artist">
+            <a [routerLink]="['/artist', album.artist.id, 'view']">{{ album.artist.name }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="learnjhipsterApp.album.style">Style</span></dt>
+        <dd>
+          <div *ngIf="album.style">
+            <a [routerLink]="['/style', album.style.id, 'view']">{{ album.style.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/album', album.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

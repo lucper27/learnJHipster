@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -150,6 +151,7 @@ public class ArtistResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of artists in body.
      */
     @GetMapping("/artists")
+   // @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_EDITOR')")
     public ResponseEntity<List<ArtistDTO>> getAllArtists(
         ArtistCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable

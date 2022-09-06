@@ -17,6 +17,18 @@ public interface AlbumMapper extends EntityMapper<AlbumDTO, Album> {
     @Mapping(target = "style", source = "style", qualifiedByName = "styleName")
     AlbumDTO toDto(Album s);
 
+    @Override
+    @Mapping(target = "songs", ignore = true)
+    @Mapping(target = "removeSongs", ignore = true)
+    Album toEntity(AlbumDTO dto);
+
+    @Override
+    @Mapping(target = "songs", ignore = true)
+    @Mapping(target = "removeSongs", ignore = true)
+    @Named("partialUpdate")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void partialUpdate(@MappingTarget Album entity, AlbumDTO dto);
+
     @Named("artistName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")

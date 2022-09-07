@@ -6,6 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IAlbum, NewAlbum } from '../album.model';
+import { IAlbumSlim } from '../album.slim.model';
 
 export type PartialUpdateAlbum = Partial<IAlbum> & Pick<IAlbum, 'id'>;
 
@@ -34,9 +35,9 @@ export class AlbumService {
     return this.http.get<IAlbum>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IAlbumSlim[]>> {
     const options = createRequestOption(req);
-    return this.http.get<IAlbum[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IAlbumSlim[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {

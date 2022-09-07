@@ -3,8 +3,11 @@ package com.kreitek.jhipster.repository;
 import com.kreitek.jhipster.domain.Album;
 import java.util.List;
 import java.util.Optional;
+
+import com.kreitek.jhipster.service.dto.AlbumSlimDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,7 +28,16 @@ public interface AlbumRepository extends JpaRepository<Album, Long>, JpaSpecific
     default Page<Album> findAllWithEagerRelationships(Pageable pageable) {
         return this.findAllWithToOneRelationships(pageable);
     }
-
+    @Query("SELECT " +
+        "alb.id as id, " +
+        "alb.title as title, " +
+        "art.id as artistId, " +
+        "art.name as artistName, " +
+        "sty.id as styleId, " +
+        "sty.name as styleName " +
+        "FROM Album alb JOIN alb.artist art " +
+        "JOIN alb.style sty")
+    Page<AlbumSlimDTO> getAllAlbumsSlim(Specification<Album> criteria, Pageable page);
     @Query(
         value = "select distinct album from Album album left join fetch album.artist left join fetch album.style",
         countQuery = "select count(distinct album) from Album album"

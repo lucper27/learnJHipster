@@ -6,6 +6,7 @@ import com.kreitek.jhipster.domain.album.AlbumRestrictScopeService;
 import com.kreitek.jhipster.repository.AlbumRepository;
 import com.kreitek.jhipster.service.criteria.AlbumCriteria;
 import com.kreitek.jhipster.service.dto.AlbumDTO;
+import com.kreitek.jhipster.service.dto.AlbumSlimDTO;
 import com.kreitek.jhipster.service.mapper.AlbumMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
@@ -61,14 +62,14 @@ public class AlbumQueryService extends QueryService<Album> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<AlbumDTO> findByCriteria(AlbumCriteria criteria, Pageable page) {
+    public Page<AlbumSlimDTO> findByCriteria(AlbumCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
 
         AlbumCriteria restrictedCriteria = this.albumRestrictScopeService.restrict(criteria);
 
 
         final Specification<Album> specification = createSpecification(restrictedCriteria);
-        return albumRepository.findAll(specification, page).map(albumMapper::toDto);
+        return albumRepository.getAllAlbumsSlim(specification, page);
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,17 +8,19 @@ import { IAlbum } from '../album.model';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { EntityArrayResponseType, AlbumService } from '../service/album.service';
+import { AlbumService } from '../service/album.service';
 import { AlbumDeleteDialogComponent } from '../delete/album-delete-dialog.component';
 import { DataUtils } from 'app/core/util/data-util.service';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
+import { IAlbumSlim } from '../album.slim.model';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
 @Component({
   selector: 'jhi-album',
   templateUrl: './album.component.html',
 })
 export class AlbumComponent implements OnInit {
-  albums?: IAlbum[];
+  albums?: IAlbumSlim[];
   isLoading = false;
 
   predicate = 'id';
@@ -29,12 +31,15 @@ export class AlbumComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  resourceUrl = "http://localhost:8080/api/album"
+
   constructor(
     protected albumService: AlbumService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected dataUtils: DataUtils,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    protected applicationConfigService: ApplicationConfigService
   ) {}
 
   trackId = (_index: number, item: IAlbum): number => this.albumService.getAlbumIdentifier(item);
@@ -63,7 +68,7 @@ export class AlbumComponent implements OnInit {
         switchMap(() => this.loadFromBackendWithRouteInformations())
       )
       .subscribe({
-        next: (res: EntityArrayResponseType) => {
+        next: (res: HttpResponse<IAlbumSlim[]>) => {
           this.onResponseSuccess(res);
         },
       });
@@ -71,7 +76,7 @@ export class AlbumComponent implements OnInit {
 
   load(): void {
     this.loadFromBackendWithRouteInformations().subscribe({
-      next: (res: EntityArrayResponseType) => {
+      next: (res: HttpResponse<IAlbumSlim[]>) => {
         this.onResponseSuccess(res);
       },
     });
@@ -85,7 +90,7 @@ export class AlbumComponent implements OnInit {
     this.handleNavigation(page, this.predicate, this.ascending, this.filters.filterOptions);
   }
 
-  protected loadFromBackendWithRouteInformations(): Observable<EntityArrayResponseType> {
+  protected loadFromBackendWithRouteInformations(): Observable<HttpResponse<IAlbumSlim[]>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
       switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending, this.filters.filterOptions))
@@ -101,13 +106,13 @@ export class AlbumComponent implements OnInit {
     this.filters.initializeFromParams(params);
   }
 
-  protected onResponseSuccess(response: EntityArrayResponseType): void {
+  protected onResponseSuccess(response: HttpResponse<IAlbumSlim[]>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
     this.albums = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: IAlbum[] | null): IAlbum[] {
+  protected fillComponentAttributesFromResponseBody(data: IAlbumSlim[] | null): IAlbumSlim[] {
     return data ?? [];
   }
 
@@ -120,7 +125,7 @@ export class AlbumComponent implements OnInit {
     predicate?: string,
     ascending?: boolean,
     filterOptions?: IFilterOption[]
-  ): Observable<EntityArrayResponseType> {
+  ): Observable<HttpResponse<IAlbumSlim[]>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
     const queryObject: any = {

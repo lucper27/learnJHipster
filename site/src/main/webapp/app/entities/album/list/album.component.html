@@ -73,20 +73,17 @@
             <a [routerLink]="['/album', album.id, 'view']">{{ album.id }}</a>
           </td>
           <td>{{ album.title }}</td>
-          <td>
-            <a *ngIf="album.cover" (click)="openFile(album.cover, album.coverContentType)">
-              <img [src]="'data:' + album.coverContentType + ';base64,' + album.cover" style="max-height: 30px" alt="album image" />
-            </a>
-            <span *ngIf="album.cover">{{ album.coverContentType }}, {{ byteSize(album.cover) }}</span>
+          <td>           
+            <img [src]="resourceUrl + '/' + album.id + '/cover'" style="max-height: 30px" alt="album image" loading="lazy" />
           </td>
           <td>
-            <div *ngIf="album.artist">
-              <a [routerLink]="['/artist', album.artist.id, 'view']">{{ album.artist.name }}</a>
+            <div>
+              <a [routerLink]="['/artist', album.artistId, 'view']">{{ album.artistName }}</a>
             </div>
           </td>
           <td>
-            <div *ngIf="album.style">
-              <a [routerLink]="['/style', album.style.id, 'view']">{{ album.style.name }}</a>
+            <div>
+              <a [routerLink]="['/style', album.styleId, 'view']">{{ album.styleName }}</a>
             </div>
           </td>
           <td class="text-end">

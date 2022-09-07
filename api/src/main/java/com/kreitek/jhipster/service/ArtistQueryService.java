@@ -8,7 +8,8 @@ import com.kreitek.jhipster.service.dto.ArtistDTO;
 import com.kreitek.jhipster.service.dto.ArtistSlimDTO;
 import com.kreitek.jhipster.service.mapper.ArtistMapper;
 import java.util.List;
-import javax.persistence.criteria.JoinType;
+
+import com.kreitek.jhipster.service.mapper.ArtistSlimMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,9 +35,12 @@ public class ArtistQueryService extends QueryService<Artist> {
 
     private final ArtistMapper artistMapper;
 
-    public ArtistQueryService(ArtistRepository artistRepository, ArtistMapper artistMapper) {
+    private final ArtistSlimMapper artistSlimMapper;
+
+    public ArtistQueryService(ArtistRepository artistRepository, ArtistMapper artistMapper, ArtistSlimMapper artistSlimMapper) {
         this.artistRepository = artistRepository;
         this.artistMapper = artistMapper;
+        this.artistSlimMapper = artistSlimMapper;
     }
 
     /**
@@ -61,7 +65,7 @@ public class ArtistQueryService extends QueryService<Artist> {
     public Page<ArtistSlimDTO> findByCriteria(ArtistCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Artist> specification = createSpecification(criteria);
-        return artistRepository.getAllArtistSlim(specification, page);
+        return artistRepository.findAll(specification, page).map(artistSlimMapper::toDto);
     }
 
     /**

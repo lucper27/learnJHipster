@@ -5,6 +5,7 @@ import com.kreitek.jhipster.service.ArtistQueryService;
 import com.kreitek.jhipster.service.ArtistService;
 import com.kreitek.jhipster.service.criteria.ArtistCriteria;
 import com.kreitek.jhipster.service.dto.ArtistDTO;
+import com.kreitek.jhipster.service.dto.ArtistSlimDTO;
 import com.kreitek.jhipster.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -152,12 +153,12 @@ public class ArtistResource {
      */
     @GetMapping("/artists")
    // @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_EDITOR')")
-    public ResponseEntity<List<ArtistDTO>> getAllArtists(
+    public ResponseEntity<List<ArtistSlimDTO>> getAllArtists(
         ArtistCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Artists by criteria: {}", criteria);
-        Page<ArtistDTO> page = artistQueryService.findByCriteria(criteria, pageable);
+        Page<ArtistSlimDTO> page = artistQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

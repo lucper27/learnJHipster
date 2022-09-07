@@ -13,7 +13,7 @@ const albumRoute: Routes = [
     path: '',
     component: AlbumComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'name,' + ASC,
     },
     canActivate: [UserRouteAccessService],
   },

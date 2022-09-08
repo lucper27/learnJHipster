@@ -13,9 +13,10 @@ import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { FilterComponent } from './filter/filter.component';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
 @NgModule({
-  imports: [SharedLibsModule],
+  imports: [SharedLibsModule, AutoCompleteModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,
@@ -44,6 +45,7 @@ import { FilterComponent } from './filter/filter.component';
     SortDirective,
     ItemCountComponent,
     FilterComponent,
+    AutoCompleteModule
   ],
 })
 export class SharedModule {}

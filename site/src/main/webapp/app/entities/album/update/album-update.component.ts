@@ -18,6 +18,7 @@ import { StyleService } from 'app/entities/style/service/style.service';
 @Component({
   selector: 'jhi-album-update',
   templateUrl: './album-update.component.html',
+  styleUrls: ['./album-update.component.scss']
 })
 export class AlbumUpdateComponent implements OnInit {
   isSaving = false;
@@ -121,16 +122,41 @@ export class AlbumUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.artistService
-      .query()
-      .pipe(map((res: HttpResponse<IArtist[]>) => res.body ?? []))
-      .pipe(map((artists: IArtist[]) => this.artistService.addArtistToCollectionIfMissing<IArtist>(artists, this.album?.artist)))
-      .subscribe((artists: IArtist[]) => (this.artistsSharedCollection = artists));
+
+    const queryArtistObject: any = {
+      sort: ['name,asc']
+    }
+
+    //this.searchArtist();
 
     this.styleService
       .query()
       .pipe(map((res: HttpResponse<IStyle[]>) => res.body ?? []))
       .pipe(map((styles: IStyle[]) => this.styleService.addStyleToCollectionIfMissing<IStyle>(styles, this.album?.style)))
-      .subscribe((styles: IStyle[]) => (this.stylesSharedCollection = styles));
+      .subscribe((styles: IStyle[]) => {
+        this.stylesSharedCollection = styles.sort((styleA,styleB) => (styleA.name! > styleB.name!) ? 1 : ((styleB.name! > styleA.name!) ? -1 : 0));});
+  }  
+
+  protected filterArtistsByName(event: any): void {
+    const conditionArtistName = String(event.query)
+    this.searchArtists(conditionArtistName);
   }
+
+  private searchArtists(artistName?: string): void {
+    const queryArtistObject: any =  {
+      sort: ['name,asc']
+    }
+
+    if (artistName) {
+      queryArtistObject["name.contains"] = artistName;
+    }
+
+    this.artistService
+      .query(queryArtistObject)
+      .pipe(map((res: HttpResponse<IArtist[]>) => res.body ?? []))
+      .pipe(map((artists: IArtist[]) => this.artistService.addArtistToCollectionIfMissing<IArtist>(artists, this.album?.artist)))
+      .subscribe((artists: IArtist[]) => (this.artistsSharedCollection = artists));
+  }
+
+  
 }

@@ -3,7 +3,9 @@ package com.kreitek.jhipster.domain.song.impl;
 import com.kreitek.jhipster.domain.song.SongCheckerFilterByAlbumAppliedGuard;
 import com.kreitek.jhipster.service.criteria.SongCriteria;
 import com.kreitek.jhipster.web.rest.errors.BadRequestAlertException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SongCheckerFilterByAlbumAppliedGuardImpl implements SongCheckerFilterByAlbumAppliedGuard {
     @Override
     public void check(SongCriteria criteria) {

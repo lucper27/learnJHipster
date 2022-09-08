@@ -9,6 +9,7 @@ export interface IFilterOptions {
   initializeFromParams(params: ParamMap): boolean;
   addFilter(name: string, ...values: string[]): boolean;
   removeFilter(name: string, value: string): boolean;
+  //addFilterNew(attribute: string, comparisonType: string, value: string[]): void;
 }
 
 export interface IFilterOption {
@@ -53,6 +54,8 @@ export class FilterOption implements IFilterOption {
     return new FilterOption(this.name, this.values.concat());
   }
 
+
+
   equals(other: IFilterOption): boolean {
     return (
       this.name === other.name &&
@@ -62,6 +65,7 @@ export class FilterOption implements IFilterOption {
     );
   }
 }
+
 
 export class FilterOptions implements IFilterOptions {
   readonly filterChanges: Subject<FilterOption[]> = new Subject();
@@ -116,7 +120,12 @@ export class FilterOptions implements IFilterOptions {
     }
     return false;
   }
-
+  /*
+  addFilterNew(attribute: string, comparisonType: string, value: string[]): void {
+    const newFilterOption: IFilterOption = new FilterOption((attribute + '.' + comparisonType), value);
+    this.filterOptions.push(newFilterOption);
+  }
+  */
   removeFilter(name: string, value: string): boolean {
     if (this.getFilterOptionByName(name)?.removeValue(value)) {
       this.changed();

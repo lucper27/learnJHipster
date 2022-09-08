@@ -26,6 +26,21 @@
 
   <jhi-filter [filters]="filters"></jhi-filter>
 
+  <form name="filterForm" role="form" novalidate [formGroup]="filtersGroup">
+    
+    <!-- Filter name -->
+    <div class="row mb-3">
+      <label class="form-label" jhiTranslate="learnjhipsterApp.artist.name" for="filter_name">Name</label>
+      <input type="text" class="form-control" name="filter_name" id="filter_name" data-cy="name" formControlName="filter_name" />
+    </div>
+
+    <div>
+      <button (click)="filter();">Filter</button>
+      <button (click)="resetFilters();">Reset filters</button>
+    </div>
+
+  </form>
+
   <div class="alert alert-warning" id="no-result" *ngIf="artists?.length === 0">
     <span jhiTranslate="learnjhipsterApp.artist.home.notFound">Ningún Artists encontrado</span>
   </div>

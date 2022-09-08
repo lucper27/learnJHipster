@@ -12,6 +12,7 @@ import { EntityArrayResponseType, ArtistService } from '../service/artist.servic
 import { ArtistDeleteDialogComponent } from '../delete/artist-delete-dialog.component';
 import { DataUtils } from 'app/core/util/data-util.service';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'jhi-artist',
@@ -29,12 +30,15 @@ export class ArtistComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  filtersGroup : FormGroup = this.createFilterFromForm();
+
   constructor(
     protected artistService: ArtistService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected dataUtils: DataUtils,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    protected formBuilder: FormBuilder
   ) {}
 
   trackId = (_index: number, item: IArtist): number => this.artistService.getArtistIdentifier(item);
@@ -98,7 +102,10 @@ export class ArtistComponent implements OnInit {
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
+
+    if(!this.filters.hasAnyFilterSet()) {
     this.filters.initializeFromParams(params);
+    }
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
@@ -159,4 +166,33 @@ export class ArtistComponent implements OnInit {
       return [predicate + ',' + ascendingQueryParam];
     }
   }
+
+  protected filter(): void {
+    //this.filters = new FilterOptions();
+    this.filters.clear();
+    if (this.filtersGroup.get(['filter_name'])?.value) {
+      this.filters.addFilter('name.contains', this.filtersGroup.get(['filter_name'])?.value);
+    }
+    this.load();
+  }
+
+  protected resetFilters(): void {
+    this.filters.clear();
+    //this.filters = new FilterOptions();
+    this.filtersGroup.reset();
+    this.load();
+  }
+
+  protected collapseFilters(): void {
+    //Todo: this
+  }
+
+  private createFilterFromForm(): FormGroup {
+    const newFilterGroup: FormGroup = this.formBuilder.group({
+      filter_name: ['',]
+    });
+
+    return newFilterGroup;
+  }
+
 }

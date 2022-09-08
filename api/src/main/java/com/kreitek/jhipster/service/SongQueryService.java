@@ -2,6 +2,7 @@ package com.kreitek.jhipster.service;
 
 import com.kreitek.jhipster.domain.*; // for static metamodels
 import com.kreitek.jhipster.domain.Song;
+import com.kreitek.jhipster.domain.song.SongCheckerFilterByAlbumAppliedGuard;
 import com.kreitek.jhipster.repository.SongRepository;
 import com.kreitek.jhipster.service.criteria.SongCriteria;
 import com.kreitek.jhipster.service.dto.SongDTO;
@@ -33,9 +34,12 @@ public class SongQueryService extends QueryService<Song> {
 
     private final SongMapper songMapper;
 
-    public SongQueryService(SongRepository songRepository, SongMapper songMapper) {
+    private final SongCheckerFilterByAlbumAppliedGuard songCheckerFilterByAlbumAppliedGuard;
+
+    public SongQueryService(SongRepository songRepository, SongMapper songMapper, SongCheckerFilterByAlbumAppliedGuard songCheckerFilterByAlbumAppliedGuard) {
         this.songRepository = songRepository;
         this.songMapper = songMapper;
+        this.songCheckerFilterByAlbumAppliedGuard = songCheckerFilterByAlbumAppliedGuard;
     }
 
     /**
@@ -59,6 +63,7 @@ public class SongQueryService extends QueryService<Song> {
     @Transactional(readOnly = true)
     public Page<SongDTO> findByCriteria(SongCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
+        this.songCheckerFilterByAlbumAppliedGuard.check(criteria);
         final Specification<Song> specification = createSpecification(criteria);
         return songRepository.findAll(specification, page).map(songMapper::toDto);
     }

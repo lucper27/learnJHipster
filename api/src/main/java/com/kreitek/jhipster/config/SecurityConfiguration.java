@@ -70,7 +70,7 @@ public class SecurityConfiguration {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/api/artists").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.EDITOR)
+            .antMatchers("/api/artists").permitAll()
             .antMatchers("/api/album/{\\d+}/cover").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()

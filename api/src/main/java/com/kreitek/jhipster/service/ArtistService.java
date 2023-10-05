@@ -2,6 +2,8 @@ package com.kreitek.jhipster.service;
 
 import com.kreitek.jhipster.service.dto.ArtistDTO;
 import java.util.Optional;
+
+import com.kreitek.jhipster.service.dto.ArtistSlimDTOProyeccion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,4 +57,5 @@ public interface ArtistService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
 }

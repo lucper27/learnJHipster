@@ -4,6 +4,7 @@ import com.kreitek.jhipster.domain.Artist;
 import com.kreitek.jhipster.repository.ArtistRepository;
 import com.kreitek.jhipster.service.ArtistService;
 import com.kreitek.jhipster.service.dto.ArtistDTO;
+import com.kreitek.jhipster.service.dto.ArtistSlimDTOProyeccion;
 import com.kreitek.jhipster.service.mapper.ArtistMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -81,4 +82,6 @@ public class ArtistServiceImpl implements ArtistService {
         log.debug("Request to delete Artist : {}", id);
         artistRepository.deleteById(id);
     }
+
+
 }

@@ -1,5 +1,7 @@
 package com.kreitek.jhipster.domain;
 
+import com.kreitek.jhipster.domain.enumeration.CardType;
+
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -17,9 +19,9 @@ public class Payment {
 
     @Column(name = "card_number")
     private Long cardNumber;
-
+    @Enumerated(EnumType.STRING)
     @Column(name = "card_type")
-    private String cardType;
+    private CardType cardType;
 
     @Column(name = "payed_at")
     private Instant payedAt;
@@ -44,11 +46,11 @@ public class Payment {
         this.cardNumber = cardNumber;
     }
 
-    public String getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
+    public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 

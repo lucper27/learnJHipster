@@ -1,20 +1,22 @@
 package com.kreitek.jhipster.service.dto;
 
 
+import com.kreitek.jhipster.domain.enumeration.CardType;
+
 import java.time.Instant;
 
 public class PaymentDTO {
 
     private Long cardNumber;
 
-    private String cardType;
+    private CardType cardType;
 
     private Instant payedAt;
 
     public PaymentDTO() {
     }
 
-    public PaymentDTO(Long cardNumber, String cardType, Instant payedAt) {
+    public PaymentDTO(Long cardNumber, CardType cardType, Instant payedAt) {
         this.cardNumber = cardNumber;
         this.cardType = cardType;
         this.payedAt = payedAt;
@@ -28,11 +30,11 @@ public class PaymentDTO {
         this.cardNumber = cardNumber;
     }
 
-    public String getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
+    public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 

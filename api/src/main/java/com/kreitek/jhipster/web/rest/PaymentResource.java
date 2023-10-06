@@ -49,31 +49,28 @@ public class PaymentResource {
         CardType cardType = paymentDTO.getCardType();
 
         /*Posibilidad 1 - lo que normalmente haríamos*/
-//        if (cardType.equals(CardType.CREDIT_CARD)) {
-//            result = creditCardPayment.makePayment(paymentDTO);
-//        } else if (cardType.equals(CardType.DEBIT_CARD)) {
-//            result = debitCardPayment.makePayment(paymentDTO);
-//        } else if (cardType.equals(CardType.GIFT_CARD)) {
-//            result = giftCardPayment.makePayment(paymentDTO);
-//        } else if (cardType.equals(CardType.PAYPAL)) {
-//            result = payPalPayment.makePayment(paymentDTO);
-//        }
+        if (cardType.equals(CardType.CREDIT_CARD)) {
+            result = creditCardPayment.makePayment(paymentDTO);
+        } else if (cardType.equals(CardType.DEBIT_CARD)) {
+            result = debitCardPayment.makePayment(paymentDTO);
+        } else if (cardType.equals(CardType.GIFT_CARD)) {
+            result = giftCardPayment.makePayment(paymentDTO);
+        } else if (cardType.equals(CardType.PAYPAL)) {
+            result = payPalPayment.makePayment(paymentDTO);
+        }
 
         /*Posibilidad 2 - lo que normalmente haríamos*/
-//        switch (cardType) {
-//            case CREDIT_CARD:
-//                result = creditCardPayment.makePayment(paymentDTO);
-//            case DEBIT_CARD:
-//                result = debitCardPayment.makePayment(paymentDTO);
-//            case GIFT_CARD:
-//                result = giftCardPayment.makePayment(paymentDTO);
-//            case PAYPAL:
-//                result = payPalPayment.makePayment(paymentDTO);
-//        }
+        switch (cardType) {
+            case CREDIT_CARD:
+                result = creditCardPayment.makePayment(paymentDTO);
+            case DEBIT_CARD:
+                result = debitCardPayment.makePayment(paymentDTO);
+            case GIFT_CARD:
+                result = giftCardPayment.makePayment(paymentDTO);
+            case PAYPAL:
+                result = payPalPayment.makePayment(paymentDTO);
+        }
 
-        /*Factory*/
-//        PaymentService paymentMethod = PaymentFactory.getPaymentMethod(paymentDTO.getCardType());
-//        result = paymentMethod.makePayment(paymentDTO);
 
         return ResponseEntity.ok().body(result);
     }

@@ -3,7 +3,6 @@ package com.kreitek.jhipster.web.rest;
 import com.kreitek.jhipster.domain.enumeration.CardType;
 import com.kreitek.jhipster.service.PaymentService;
 import com.kreitek.jhipster.service.dto.PaymentDTO;
-import com.kreitek.jhipster.service.factory.PaymentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

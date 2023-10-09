@@ -9,13 +9,15 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Song} and its DTO {@link SongDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ArtistMapper.class})
 public interface SongMapper extends EntityMapper<SongDTO, Song> {
     @Mapping(target = "album", source = "album", qualifiedByName = "albumTitle")
+    @Mapping(target = "artist", source = "artist")
     SongDTO toDto(Song s);
 
     @Override
     @Mapping(target = "album", source = "album", qualifiedByName = "albumEntityTitle")
+    @Mapping(target = "artist", source = "artist")
     Song toEntity(SongDTO dto);
 
     @Override

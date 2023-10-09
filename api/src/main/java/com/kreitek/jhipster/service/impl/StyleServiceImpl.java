@@ -82,4 +82,9 @@ public class StyleServiceImpl implements StyleService {
         log.debug("Request to delete Style : {}", id);
         styleRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<StyleDTO> findOneByName(String name) {
+        return styleRepository.findByName(name).map(styleMapper::toDto);
+    }
 }

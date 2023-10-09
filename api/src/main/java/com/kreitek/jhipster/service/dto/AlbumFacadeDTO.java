@@ -17,7 +17,7 @@ public class AlbumFacadeDTO {
 
     private ArtistDTO artist;
 
-    private Style style;
+    private StyleDTO style;
 
     private Set<SongDTO> songs = new HashSet<>();
 
@@ -56,11 +56,11 @@ public class AlbumFacadeDTO {
         this.artist = artist;
     }
 
-    public Style getStyle() {
+    public StyleDTO getStyle() {
         return style;
     }
 
-    public void setStyle(Style style) {
+    public void setStyle(StyleDTO style) {
         this.style = style;
     }
 

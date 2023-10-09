@@ -53,4 +53,6 @@ public interface StyleService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<StyleDTO> findOneByName(String name);
 }

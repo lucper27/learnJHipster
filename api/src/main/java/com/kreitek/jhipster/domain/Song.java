@@ -40,6 +40,10 @@ public class Song implements Serializable {
     @JsonIgnoreProperties(value = { "artist", "style", "songs" }, allowSetters = true)
     private Album album;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Artist artist;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {

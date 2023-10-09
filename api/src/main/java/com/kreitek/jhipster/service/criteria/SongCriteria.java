@@ -31,6 +31,8 @@ public class SongCriteria implements Serializable, Criteria {
 
     private LongFilter albumId;
 
+    private LongFilter artistId;
+
     private Boolean distinct;
 
     public SongCriteria() {}
@@ -41,6 +43,7 @@ public class SongCriteria implements Serializable, Criteria {
         this.duration = other.duration == null ? null : other.duration.copy();
         this.inclusionDate = other.inclusionDate == null ? null : other.inclusionDate.copy();
         this.albumId = other.albumId == null ? null : other.albumId.copy();
+        this.artistId = other.artistId == null ? null : other.artistId.copy();
         this.distinct = other.distinct;
     }
 
@@ -120,8 +123,23 @@ public class SongCriteria implements Serializable, Criteria {
         return albumId;
     }
 
+    public LongFilter artistId() {
+        if (artistId == null) {
+            artistId = new LongFilter();
+        }
+        return artistId;
+    }
+
     public void setAlbumId(LongFilter albumId) {
         this.albumId = albumId;
+    }
+
+    public LongFilter getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(LongFilter artistId) {
+        this.artistId = artistId;
     }
 
     public Boolean getDistinct() {

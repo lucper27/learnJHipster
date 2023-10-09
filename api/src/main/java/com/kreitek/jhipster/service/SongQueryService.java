@@ -110,6 +110,12 @@ public class SongQueryService extends QueryService<Song> {
                         buildSpecification(criteria.getAlbumId(), root -> root.join(Song_.album, JoinType.LEFT).get(Album_.id))
                     );
             }
+            if (criteria.getArtistId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getArtistId(), root -> root.join(Song_.artist, JoinType.LEFT).get(Artist_.id))
+                    );
+            }
         }
         return specification;
     }

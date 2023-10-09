@@ -13,5 +13,11 @@
                                  constraintName="fk_song__album_id"
                                  referencedColumnNames="id"
                                  referencedTableName="album"/>
+
+        <addForeignKeyConstraint baseColumnNames="artist_id"
+                                 baseTableName="song"
+                                 constraintName="fk_song__artist_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="artist"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,10 +1,12 @@
 package com.kreitek.jhipster.web.rest;
 
 import com.kreitek.jhipster.repository.AlbumRepository;
+import com.kreitek.jhipster.service.AlbumFacadeService;
 import com.kreitek.jhipster.service.AlbumQueryService;
 import com.kreitek.jhipster.service.AlbumService;
 import com.kreitek.jhipster.service.criteria.AlbumCriteria;
 import com.kreitek.jhipster.service.dto.AlbumDTO;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.AlbumSlimDTO;
 import com.kreitek.jhipster.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -48,10 +50,13 @@ public class AlbumResource {
 
     private final AlbumQueryService albumQueryService;
 
-    public AlbumResource(AlbumService albumService, AlbumRepository albumRepository, AlbumQueryService albumQueryService) {
+    private final AlbumFacadeService albumFacadeService;
+
+    public AlbumResource(AlbumService albumService, AlbumRepository albumRepository, AlbumQueryService albumQueryService, AlbumFacadeService albumFacadeService) {
         this.albumService = albumService;
         this.albumRepository = albumRepository;
         this.albumQueryService = albumQueryService;
+        this.albumFacadeService = albumFacadeService;
     }
 
     /**
@@ -210,5 +215,12 @@ public class AlbumResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/album")
+    public ResponseEntity<AlbumFacadeDTO> createAlbumWithSongs(@Valid @RequestBody AlbumFacadeDTO albumFacadeDTO) {
+        AlbumFacadeDTO result = albumFacadeService.createAlbum(albumFacadeDTO);
+        return ResponseEntity
+            .ok().body(result);
     }
 }

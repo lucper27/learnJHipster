@@ -98,6 +98,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public boolean albumExists(AlbumFacadeDTO albumFacadeDTO) {
+        // solo puede haber un album del artista con X nombre, no pueden haber 2 albumes con el mismo nombre
         AlbumCriteria albumCriteria = new AlbumCriteria();
         LongFilter artistId = new LongFilter();
         artistId.setEquals(albumFacadeDTO.getArtist().getId());
@@ -106,13 +107,7 @@ public class AlbumServiceImpl implements AlbumService {
         albumCriteria.setTitle(albumTitle);
         albumCriteria.setArtistId(artistId);
         List<AlbumDTO> albumDTOS = albumQueryService.findByCriteria(albumCriteria);
-        if (albumDTOS.isEmpty()) {
-            return true;
-        } else {
-            log.error("Album already exists with id -> " + albumDTOS.get(0).getId());
-            //throw DuplicatedAlbumException
-            return false;
-        }
+        return !albumDTOS.isEmpty(); // album exists
     }
 
     @Override

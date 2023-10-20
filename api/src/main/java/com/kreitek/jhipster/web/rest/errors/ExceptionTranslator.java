@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
+
+import com.kreitek.jhipster.exception.DuplicatedAlbumException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -21,11 +23,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.zalando.problem.DefaultProblem;
-import org.zalando.problem.Problem;
-import org.zalando.problem.ProblemBuilder;
-import org.zalando.problem.Status;
-import org.zalando.problem.StatusType;
+import org.zalando.problem.*;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
@@ -219,4 +217,17 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
         // This list is for sure not complete
         return StringUtils.containsAny(message, "org.", "java.", "net.", "javax.", "com.", "io.", "de.", "com.kreitek.jhipster");
     }
+
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleDuplicatedAlbumException(DuplicatedAlbumException ex, NativeWebRequest request) {
+
+        Problem problem = Problem.builder()
+            .withStatus(ex.getStatus())
+            .withType(URI.create("https://pydo.ai"))
+            .withDetail(ex.getMessage())
+            .with(MESSAGE_KEY, "Status CODE -> " + ex.getStatus()).build();
+        return create(ex, problem, request);
+    }
+// para capturar la exception necesito recibir por parametros la exception que cree antes.
+    // el nombre del metodo puede ser cualquier cosa
 }

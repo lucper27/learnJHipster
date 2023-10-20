@@ -2,6 +2,8 @@ package com.kreitek.jhipster.service;
 
 import com.kreitek.jhipster.service.dto.AlbumDTO;
 import java.util.Optional;
+
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -63,4 +65,8 @@ public interface AlbumService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    boolean albumExists(AlbumFacadeDTO albumFacadeDTO);
+
+    AlbumDTO createAlbumFromFacade(AlbumFacadeDTO albumFacadeDTO);
 }

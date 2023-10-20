@@ -2,9 +2,14 @@ package com.kreitek.jhipster.service.impl;
 
 import com.kreitek.jhipster.domain.Album;
 import com.kreitek.jhipster.repository.AlbumRepository;
+import com.kreitek.jhipster.service.AlbumQueryService;
 import com.kreitek.jhipster.service.AlbumService;
+import com.kreitek.jhipster.service.criteria.AlbumCriteria;
 import com.kreitek.jhipster.service.dto.AlbumDTO;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.mapper.AlbumMapper;
+
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service Implementation for managing {@link Album}.
@@ -26,9 +33,12 @@ public class AlbumServiceImpl implements AlbumService {
 
     private final AlbumMapper albumMapper;
 
-    public AlbumServiceImpl(AlbumRepository albumRepository, AlbumMapper albumMapper) {
+    private final AlbumQueryService albumQueryService;
+
+    public AlbumServiceImpl(AlbumRepository albumRepository, AlbumMapper albumMapper, AlbumQueryService albumQueryService) {
         this.albumRepository = albumRepository;
         this.albumMapper = albumMapper;
+        this.albumQueryService = albumQueryService;
     }
 
     @Override
@@ -84,5 +94,35 @@ public class AlbumServiceImpl implements AlbumService {
     public void delete(Long id) {
         log.debug("Request to delete Album : {}", id);
         albumRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean albumExists(AlbumFacadeDTO albumFacadeDTO) {
+        AlbumCriteria albumCriteria = new AlbumCriteria();
+        LongFilter artistId = new LongFilter();
+        artistId.setEquals(albumFacadeDTO.getArtist().getId());
+        StringFilter albumTitle = new StringFilter();
+        albumTitle.setEquals(albumFacadeDTO.getTitle());
+        albumCriteria.setTitle(albumTitle);
+        albumCriteria.setArtistId(artistId);
+        List<AlbumDTO> albumDTOS = albumQueryService.findByCriteria(albumCriteria);
+        if (albumDTOS.isEmpty()) {
+            return true;
+        } else {
+            log.error("Album already exists with id -> " + albumDTOS.get(0).getId());
+            //throw DuplicatedAlbumException
+            return false;
+        }
+    }
+
+    @Override
+    public AlbumDTO createAlbumFromFacade(AlbumFacadeDTO albumFacadeDTO) {
+        AlbumDTO albumDTO = new AlbumDTO();
+        albumDTO.setArtist(albumFacadeDTO.getArtist());
+        albumDTO.setTitle(albumFacadeDTO.getTitle());
+        albumDTO.setCover(albumFacadeDTO.getCover());
+        albumDTO.setCoverContentType(albumFacadeDTO.getCoverContentType());
+        albumDTO.setStyle(albumFacadeDTO.getStyle());
+        return save(albumDTO);
     }
 }

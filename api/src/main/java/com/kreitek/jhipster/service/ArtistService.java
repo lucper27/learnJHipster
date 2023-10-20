@@ -1,5 +1,6 @@
 package com.kreitek.jhipster.service;
 
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.ArtistDTO;
 import java.util.Optional;
 
@@ -57,5 +58,7 @@ public interface ArtistService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void verifyArtistOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO);
 
 }

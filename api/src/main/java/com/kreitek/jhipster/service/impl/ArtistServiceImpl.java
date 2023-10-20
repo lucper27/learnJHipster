@@ -2,10 +2,14 @@ package com.kreitek.jhipster.service.impl;
 
 import com.kreitek.jhipster.domain.Artist;
 import com.kreitek.jhipster.repository.ArtistRepository;
+import com.kreitek.jhipster.service.ArtistQueryService;
 import com.kreitek.jhipster.service.ArtistService;
+import com.kreitek.jhipster.service.criteria.ArtistCriteria;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.ArtistDTO;
-import com.kreitek.jhipster.service.dto.ArtistSlimDTOProyeccion;
 import com.kreitek.jhipster.service.mapper.ArtistMapper;
+
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.filter.StringFilter;
 
 /**
  * Service Implementation for managing {@link Artist}.
@@ -27,9 +32,12 @@ public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistMapper artistMapper;
 
-    public ArtistServiceImpl(ArtistRepository artistRepository, ArtistMapper artistMapper) {
+    private final ArtistQueryService artistQueryService;
+
+    public ArtistServiceImpl(ArtistRepository artistRepository, ArtistMapper artistMapper, ArtistQueryService artistQueryService) {
         this.artistRepository = artistRepository;
         this.artistMapper = artistMapper;
+        this.artistQueryService = artistQueryService;
     }
 
     @Override
@@ -81,6 +89,22 @@ public class ArtistServiceImpl implements ArtistService {
     public void delete(Long id) {
         log.debug("Request to delete Artist : {}", id);
         artistRepository.deleteById(id);
+    }
+
+    @Override
+    public void verifyArtistOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO) {
+        /*Verificar que el artista existe*/
+        ArtistCriteria artistCriteria = new ArtistCriteria();
+        StringFilter artistName = new StringFilter();
+        artistName.setEquals(albumFacadeDTO.getArtist().getName());
+        artistCriteria.setName(artistName);
+        // el campo nombre es único en la bd, por lo que no pueden haber 2 artistas con el mismo nombre (al menos en esta bd ficticia)
+        List<ArtistDTO> artistDTOS = artistQueryService.findByCriteria(artistCriteria);
+        if (artistDTOS.size() > 0) {
+            albumFacadeDTO.setArtist(artistDTOS.get(0));
+        } else {
+            albumFacadeDTO.setArtist(save(albumFacadeDTO.getArtist()));
+        }
     }
 
 

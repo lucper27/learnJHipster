@@ -3,6 +3,7 @@ package com.kreitek.jhipster.service.impl;
 import com.kreitek.jhipster.domain.Style;
 import com.kreitek.jhipster.repository.StyleRepository;
 import com.kreitek.jhipster.service.StyleService;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.StyleDTO;
 import com.kreitek.jhipster.service.mapper.StyleMapper;
 import java.util.LinkedList;
@@ -86,5 +87,15 @@ public class StyleServiceImpl implements StyleService {
     @Override
     public Optional<StyleDTO> findOneByName(String name) {
         return styleRepository.findByName(name).map(styleMapper::toDto);
+    }
+
+    @Override
+    public void findStyleOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO) {
+        Optional<StyleDTO> styleOptional = findOneByName(albumFacadeDTO.getStyle().getName());
+        if (styleOptional.isEmpty()) {
+            albumFacadeDTO.setStyle(save(albumFacadeDTO.getStyle()));
+        } else {
+            albumFacadeDTO.setStyle(styleOptional.get());
+        }
     }
 }

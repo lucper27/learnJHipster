@@ -1,7 +1,11 @@
 package com.kreitek.jhipster.service;
 
+import com.kreitek.jhipster.service.dto.AlbumDTO;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.SongDTO;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -63,4 +67,6 @@ public interface SongService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Set<SongDTO> addSongsToAlbum(AlbumFacadeDTO albumFacadeDTO, AlbumDTO newAlbumDTO);
 }

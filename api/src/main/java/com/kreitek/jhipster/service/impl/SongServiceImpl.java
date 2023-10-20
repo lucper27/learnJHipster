@@ -3,9 +3,16 @@ package com.kreitek.jhipster.service.impl;
 import com.kreitek.jhipster.domain.Song;
 import com.kreitek.jhipster.repository.SongRepository;
 import com.kreitek.jhipster.service.SongService;
+import com.kreitek.jhipster.service.dto.AlbumDTO;
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
+import com.kreitek.jhipster.service.dto.ArtistDTO;
 import com.kreitek.jhipster.service.dto.SongDTO;
 import com.kreitek.jhipster.service.mapper.SongMapper;
+
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +91,19 @@ public class SongServiceImpl implements SongService {
     public void delete(Long id) {
         log.debug("Request to delete Song : {}", id);
         songRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<SongDTO> addSongsToAlbum(AlbumFacadeDTO albumFacadeDTO, AlbumDTO newAlbumDTO) {
+        Set<SongDTO> songResult = new HashSet<>();
+        AlbumDTO finalAlbumDTO = newAlbumDTO;
+        ArtistDTO finalArtistDTO = albumFacadeDTO.getArtist();
+        albumFacadeDTO.getSongs().forEach(eachSong -> {
+            eachSong.setArtist(finalArtistDTO);
+            eachSong.setAlbum(finalAlbumDTO);
+            songResult.add(save(eachSong));
+        });
+
+        return songResult;
     }
 }

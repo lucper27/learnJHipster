@@ -1,5 +1,6 @@
 package com.kreitek.jhipster.service;
 
+import com.kreitek.jhipster.service.dto.AlbumFacadeDTO;
 import com.kreitek.jhipster.service.dto.StyleDTO;
 import java.util.List;
 import java.util.Optional;
@@ -55,4 +56,6 @@ public interface StyleService {
     void delete(Long id);
 
     Optional<StyleDTO> findOneByName(String name);
+
+    void findStyleOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO);
 }

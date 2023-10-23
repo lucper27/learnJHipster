@@ -1,5 +1,6 @@
 package com.kreitek.jhipster.web.rest;
 
+import com.kreitek.jhipster.exception.AlbumFacadeException;
 import com.kreitek.jhipster.repository.AlbumRepository;
 import com.kreitek.jhipster.service.AlbumFacadeService;
 import com.kreitek.jhipster.service.AlbumQueryService;
@@ -219,8 +220,15 @@ public class AlbumResource {
 
     @PostMapping("/album")
     public ResponseEntity<AlbumFacadeDTO> createAlbumWithSongs(@Valid @RequestBody AlbumFacadeDTO albumFacadeDTO) {
-        AlbumFacadeDTO result = albumFacadeService.createAlbum(albumFacadeDTO);
+        AlbumFacadeDTO albumFacadeResult;
+
+        try {
+            albumFacadeResult = albumFacadeService.createAlbum(albumFacadeDTO);
+        } catch (Exception e) {
+            throw new AlbumFacadeException(e.getMessage());
+        }
+
         return ResponseEntity
-            .ok().body(result);
+            .ok().body(albumFacadeResult);
     }
 }

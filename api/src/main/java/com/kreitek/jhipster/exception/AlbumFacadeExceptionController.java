@@ -1,5 +1,6 @@
 package com.kreitek.jhipster.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,12 +11,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class AlbumFacadeExceptionController extends ResponseEntityExceptionHandler {
 
 @ExceptionHandler
-public ResponseEntity<ErrorDescription> handlePersonalizedException(DuplicatedAlbumException ex) {
-    ResponseStatus responseStatus = ex.getClass().getAnnotation(ResponseStatus.class);
-    ErrorDescription errorDescription = new ErrorDescription(responseStatus.value(), ex.getMessage(), "Some Other info");
+public ResponseEntity<ErrorDescription> handlePersonalizedException(AlbumFacadeException ex) {
+
+    ErrorDescription errorDescription = new ErrorDescription(ex.getMessage(), "Some Other info");
 
     return ResponseEntity
-        .status(responseStatus.value())
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(errorDescription);
 }
 }

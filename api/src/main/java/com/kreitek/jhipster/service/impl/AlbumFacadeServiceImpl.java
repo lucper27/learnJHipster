@@ -31,7 +31,6 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
     @Override
     @Transactional
     public AlbumFacadeDTO createAlbum(AlbumFacadeDTO albumFacadeDTO) {
-        /*El albúm que se crerá supone que todas las canciones son del mismo artista*/
         AlbumFacadeDTO albumCreated = new AlbumFacadeDTO();
         boolean artistExists = artistService.verifyArtistExists(albumFacadeDTO);
 
@@ -41,7 +40,7 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
 
         boolean albumExists = albumService.albumExists(albumFacadeDTO);
 
-        if (albumExists) {
+        if (!albumExists) {
             boolean styleExists = styleService.styleExists(albumFacadeDTO);
             if (!styleExists) {
                 albumFacadeDTO.setStyle(styleService.save(albumFacadeDTO.getStyle()));
@@ -53,6 +52,7 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
             albumCreated = albumFacadeDTO;
         } else {
             log.error("Album already exists");
+            throw new DuplicatedAlbumException("Album can't be duplicated");
         }
         return albumCreated;
     }

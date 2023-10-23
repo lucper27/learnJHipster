@@ -9,8 +9,7 @@ public class ErrorDescription implements Serializable {
     private String Detail;
     private String Message;
 
-    public ErrorDescription(HttpStatus status, String detail, String message) {
-        this.status = status;
+    public ErrorDescription(String detail, String message) {
         this.Detail = detail;
         this.Message = message;
     }

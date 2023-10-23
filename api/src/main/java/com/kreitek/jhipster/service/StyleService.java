@@ -57,5 +57,5 @@ public interface StyleService {
 
     Optional<StyleDTO> findOneByName(String name);
 
-    void findStyleOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO);
+    boolean styleExists(AlbumFacadeDTO albumFacadeDTO);
 }

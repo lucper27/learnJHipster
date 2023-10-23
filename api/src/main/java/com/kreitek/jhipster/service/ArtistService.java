@@ -59,6 +59,5 @@ public interface ArtistService {
      */
     void delete(Long id);
 
-    void verifyArtistOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO);
-
+    boolean verifyArtistExists(AlbumFacadeDTO albumFacadeDTO);
 }

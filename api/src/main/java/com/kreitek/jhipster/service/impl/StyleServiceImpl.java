@@ -90,12 +90,12 @@ public class StyleServiceImpl implements StyleService {
     }
 
     @Override
-    public void findStyleOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO) {
+    public boolean styleExists(AlbumFacadeDTO albumFacadeDTO) {
         Optional<StyleDTO> styleOptional = findOneByName(albumFacadeDTO.getStyle().getName());
-        if (styleOptional.isEmpty()) {
-            albumFacadeDTO.setStyle(save(albumFacadeDTO.getStyle()));
+        if (styleOptional.isPresent()) {
+            return true;
         } else {
-            albumFacadeDTO.setStyle(styleOptional.get());
+            return false;
         }
     }
 }

@@ -92,7 +92,7 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public void verifyArtistOrCreateIfNotPresent(AlbumFacadeDTO albumFacadeDTO) {
+    public boolean verifyArtistExists(AlbumFacadeDTO albumFacadeDTO) {
         /*Verificar que el artista existe*/
         ArtistCriteria artistCriteria = new ArtistCriteria();
         StringFilter artistName = new StringFilter();
@@ -100,11 +100,7 @@ public class ArtistServiceImpl implements ArtistService {
         artistCriteria.setName(artistName);
         // el campo nombre es único en la bd, por lo que no pueden haber 2 artistas con el mismo nombre (al menos en esta bd ficticia)
         List<ArtistDTO> artistDTOS = artistQueryService.findByCriteria(artistCriteria);
-        if (artistDTOS.size() > 0) {
-            albumFacadeDTO.setArtist(artistDTOS.get(0));
-        } else {
-            albumFacadeDTO.setArtist(save(albumFacadeDTO.getArtist()));
-        }
+        return artistDTOS.size() > 0;
     }
 
 

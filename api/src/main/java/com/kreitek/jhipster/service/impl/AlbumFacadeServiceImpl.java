@@ -32,20 +32,29 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
     @Transactional
     public AlbumFacadeDTO createAlbum(AlbumFacadeDTO albumFacadeDTO) {
         /*El albúm que se crerá supone que todas las canciones son del mismo artista*/
-        artistService.verifyArtistOrCreateIfNotPresent(albumFacadeDTO);
+        AlbumFacadeDTO albumCreated = new AlbumFacadeDTO();
+        boolean artistExists = artistService.verifyArtistExists(albumFacadeDTO);
+
+        if (!artistExists) {
+            albumFacadeDTO.setArtist(artistService.save(albumFacadeDTO.getArtist()));
+        }
+
         boolean albumExists = albumService.albumExists(albumFacadeDTO);
 
-            if (!albumExists) {
-                styleService.findStyleOrCreateIfNotPresent(albumFacadeDTO);
-                AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(albumFacadeDTO);
-                Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
-                albumFacadeDTO.getSongs().clear();
-                albumFacadeDTO.setSongs(songResult);
-            } else {
-                log.error("Album already exists for Artist -> {} and album Name -> {}", albumFacadeDTO.getArtist(), albumFacadeDTO.getTitle());
-                throw new DuplicatedAlbumException("Album already exists, duplication not allowed");
+        if (albumExists) {
+            boolean styleExists = styleService.styleExists(albumFacadeDTO);
+            if (!styleExists) {
+                albumFacadeDTO.setStyle(styleService.save(albumFacadeDTO.getStyle()));
             }
-        return albumFacadeDTO;
+            AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(albumFacadeDTO);
+            Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
+            albumFacadeDTO.getSongs().clear();
+            albumFacadeDTO.setSongs(songResult);
+            albumCreated = albumFacadeDTO;
+        } else {
+            log.error("Album already exists");
+        }
+        return albumCreated;
     }
 
 }

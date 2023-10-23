@@ -1,8 +1,5 @@
 package com.kreitek.jhipster.service.dto;
 
-import com.kreitek.jhipster.domain.Artist;
-import com.kreitek.jhipster.domain.Song;
-import com.kreitek.jhipster.domain.Style;
 
 import java.util.HashSet;
 import java.util.Set;

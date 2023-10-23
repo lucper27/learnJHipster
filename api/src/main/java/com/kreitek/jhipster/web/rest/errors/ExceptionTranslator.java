@@ -218,16 +218,16 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
         return StringUtils.containsAny(message, "org.", "java.", "net.", "javax.", "com.", "io.", "de.", "com.kreitek.jhipster");
     }
 
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleDuplicatedAlbumException(DuplicatedAlbumException ex, NativeWebRequest request) {
-
-        Problem problem = Problem.builder()
-            .withStatus(ex.getStatus())
-            .withType(URI.create("https://pydo.ai"))
-            .withDetail(ex.getMessage())
-            .with(MESSAGE_KEY, "Status CODE -> " + ex.getStatus()).build();
-        return create(ex, problem, request);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<Problem> handleDuplicatedAlbumException(DuplicatedAlbumException ex, NativeWebRequest request) {
+//
+//        Problem problem = Problem.builder()
+//            .withStatus(ex.getStatus())
+//            .withType(URI.create("https://pydo.ai"))
+//            .withDetail(ex.getMessage())
+//            .with(MESSAGE_KEY, "Status CODE -> " + ex.getStatus()).build();
+//        return create(ex, problem, request);
+//    }
 // para capturar la exception necesito recibir por parametros la exception que cree antes.
     // el nombre del metodo puede ser cualquier cosa
 }

@@ -93,7 +93,7 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public boolean verifyArtistExists(AlbumFacadeDTO albumFacadeDTO) {
-        /*Verificar que el artista existe*/
+        log.info("Verify if the artist exists -> {}", albumFacadeDTO.getArtist().getName());
         ArtistCriteria artistCriteria = new ArtistCriteria();
         StringFilter artistName = new StringFilter();
         artistName.setEquals(albumFacadeDTO.getArtist().getName());

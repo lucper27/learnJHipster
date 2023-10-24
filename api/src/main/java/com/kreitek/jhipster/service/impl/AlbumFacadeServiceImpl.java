@@ -31,7 +31,8 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
     @Override
     @Transactional
     public AlbumFacadeDTO createAlbum(AlbumFacadeDTO albumFacadeDTO) {
-        AlbumFacadeDTO albumCreated = new AlbumFacadeDTO();
+        log.info("Creating album from album facadeDTO, {}", albumFacadeDTO);
+        AlbumFacadeDTO albumCreated;
         boolean artistExists = artistService.verifyArtistExists(albumFacadeDTO);
 
         if (!artistExists) {
@@ -41,13 +42,13 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
         boolean albumExists = albumService.albumExists(albumFacadeDTO);
 
         if (!albumExists) {
-            boolean styleExists = styleService.styleExists(albumFacadeDTO);
+            log.info("Album doesn't exists, it's new album");
+            boolean styleExists = styleService.styleExists(albumFacadeDTO.getStyle().getName());
             if (!styleExists) {
                 albumFacadeDTO.setStyle(styleService.save(albumFacadeDTO.getStyle()));
             }
             AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(albumFacadeDTO);
             Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
-            albumFacadeDTO.getSongs().clear();
             albumFacadeDTO.setSongs(songResult);
             albumCreated = albumFacadeDTO;
         } else {

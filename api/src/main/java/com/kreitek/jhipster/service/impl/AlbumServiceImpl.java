@@ -99,6 +99,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public boolean albumExists(AlbumFacadeDTO albumFacadeDTO) {
         // solo puede haber un album del artista con X nombre, no pueden haber 2 albumes con el mismo nombre
+        log.info("Verify that the album exists");
         AlbumCriteria albumCriteria = new AlbumCriteria();
         LongFilter artistId = new LongFilter();
         artistId.setEquals(albumFacadeDTO.getArtist().getId());

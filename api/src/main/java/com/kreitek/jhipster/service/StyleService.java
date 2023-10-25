@@ -58,4 +58,6 @@ public interface StyleService {
     Optional<StyleDTO> findOneByName(String name);
 
     boolean styleExists(String name);
+
+
 }

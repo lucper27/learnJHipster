@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 import java.util.Set;
 @Component
 public class AlbumFacadeServiceImpl implements AlbumFacadeService {
@@ -32,32 +34,51 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
     @Transactional
     public AlbumFacadeDTO createAlbum(AlbumFacadeDTO albumFacadeDTO) {
         log.info("Creating album from album facadeDTO, {}", albumFacadeDTO);
-        AlbumFacadeDTO albumCreated;
-        boolean artistExists = artistService.verifyArtistExistsByName(albumFacadeDTO.getArtist().getName());
+        AlbumFacadeDTO newAlbumFacadeDTO;
 
-        if (!artistExists) {
-            albumFacadeDTO.setArtist(artistService.save(albumFacadeDTO.getArtist()));
-        }
+        newAlbumFacadeDTO = setArtist(albumFacadeDTO);
 
-        boolean albumExists = albumService.albumExists(albumFacadeDTO);
+        boolean albumExists = albumService.albumExists(newAlbumFacadeDTO);
 
         if (!albumExists) {
             log.info("Album doesn't exists, it's new album");
-            boolean styleExists = styleService.styleExists(albumFacadeDTO.getStyle().getName());
-            if (!styleExists) {
-                albumFacadeDTO.setStyle(styleService.save(albumFacadeDTO.getStyle()));
+            newAlbumFacadeDTO = setStyle(newAlbumFacadeDTO);
+
+            AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(newAlbumFacadeDTO);
+            if (newAlbumFacadeDTO.getSongs().size() > 0) {
+                Set<SongDTO> songResult = songService.addSongsToAlbum(newAlbumFacadeDTO, newAlbumDTO);
+                newAlbumFacadeDTO.setSongs(songResult);
             }
-            AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(albumFacadeDTO);
-            if (albumFacadeDTO.getSongs().size() > 0) {
-                Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
-                albumFacadeDTO.setSongs(songResult);
-            }
-            albumCreated = albumFacadeDTO;
         } else {
             log.error("Album already exists");
             throw new DuplicatedAlbumException("Album can't be duplicated");
         }
-        return albumCreated;
+        return newAlbumFacadeDTO;
     }
+
+    private AlbumFacadeDTO setStyle(AlbumFacadeDTO albumFacadeDTO) {
+        Optional<StyleDTO> styleDTOOptional = styleService.findOneByName(albumFacadeDTO.getStyle().getName());
+        StyleDTO styleDTO;
+        if (styleDTOOptional.isPresent()) {
+            styleDTO = styleDTOOptional.get();
+        } else {
+            styleDTO = styleService.save(albumFacadeDTO.getStyle());
+        }
+        albumFacadeDTO.setStyle(styleDTO);
+        return albumFacadeDTO;
+    }
+
+    private AlbumFacadeDTO setArtist(AlbumFacadeDTO albumFacadeDTO) {
+        ArtistDTO artistDTO;
+        Optional<ArtistDTO> optionalArtistDTO = artistService.findByName(albumFacadeDTO.getArtist().getName());
+        if (optionalArtistDTO.isPresent()) {
+            artistDTO = optionalArtistDTO.get();
+        } else {
+            artistDTO = artistService.save(albumFacadeDTO.getArtist());
+        }
+        albumFacadeDTO.setArtist(artistDTO);
+        return albumFacadeDTO;
+    }
+
 
 }

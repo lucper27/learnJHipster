@@ -60,4 +60,6 @@ public interface ArtistService {
     void delete(Long id);
 
     boolean verifyArtistExistsByName(String name);
+
+    Optional<ArtistDTO> findByName(String name);
 }

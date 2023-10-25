@@ -103,5 +103,10 @@ public class ArtistServiceImpl implements ArtistService {
         return artistDTOS.size() > 0;
     }
 
+    @Override
+    public Optional<ArtistDTO> findByName(String name) {
+        return artistRepository.findByName(name).map(artistMapper::toDto);
+    }
+
 
 }

@@ -33,7 +33,7 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
     public AlbumFacadeDTO createAlbum(AlbumFacadeDTO albumFacadeDTO) {
         log.info("Creating album from album facadeDTO, {}", albumFacadeDTO);
         AlbumFacadeDTO albumCreated;
-        boolean artistExists = artistService.verifyArtistExists(albumFacadeDTO);
+        boolean artistExists = artistService.verifyArtistExistsByName(albumFacadeDTO.getArtist().getName());
 
         if (!artistExists) {
             albumFacadeDTO.setArtist(artistService.save(albumFacadeDTO.getArtist()));
@@ -48,8 +48,10 @@ public class AlbumFacadeServiceImpl implements AlbumFacadeService {
                 albumFacadeDTO.setStyle(styleService.save(albumFacadeDTO.getStyle()));
             }
             AlbumDTO newAlbumDTO = albumService.createAlbumFromFacade(albumFacadeDTO);
-            Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
-            albumFacadeDTO.setSongs(songResult);
+            if (albumFacadeDTO.getSongs().size() > 0) {
+                Set<SongDTO> songResult = songService.addSongsToAlbum(albumFacadeDTO, newAlbumDTO);
+                albumFacadeDTO.setSongs(songResult);
+            }
             albumCreated = albumFacadeDTO;
         } else {
             log.error("Album already exists");

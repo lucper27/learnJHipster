@@ -221,6 +221,13 @@ public class AlbumResource {
     @PostMapping("/album")
     public ResponseEntity<AlbumFacadeDTO> createAlbumWithSongs(@Valid @RequestBody AlbumFacadeDTO albumFacadeDTO) {
         AlbumFacadeDTO albumFacadeResult;
+        log.info("Request to create album from AlbumFacadeDTO -> {}", albumFacadeDTO);
+        if (albumFacadeDTO.getArtist() == null) {
+            throw new BadRequestAlertException("Artist can't be null", null, null);
+        }
+        if (albumFacadeDTO.getStyle() == null) {
+            throw new BadRequestAlertException("Style can't be null", null, null);
+        }
 
         try {
             albumFacadeResult = albumFacadeService.createAlbum(albumFacadeDTO);

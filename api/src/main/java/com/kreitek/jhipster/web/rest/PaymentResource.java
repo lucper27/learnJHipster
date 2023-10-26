@@ -3,6 +3,7 @@ package com.kreitek.jhipster.web.rest;
 import com.kreitek.jhipster.domain.enumeration.CardType;
 import com.kreitek.jhipster.service.PaymentService;
 import com.kreitek.jhipster.service.dto.PaymentDTO;
+import com.kreitek.jhipster.service.factory.PaymentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,30 +47,32 @@ public class PaymentResource {
         log.debug("Rest request to make payment -> {}", paymentDTO);
         PaymentDTO result = new PaymentDTO();
         CardType cardType = paymentDTO.getCardType();
-
-        /*Posibilidad 1 - lo que normalmente haríamos*/
-        if (cardType.equals(CardType.CREDIT_CARD)) {
-            result = creditCardPayment.makePayment(paymentDTO);
-        } else if (cardType.equals(CardType.DEBIT_CARD)) {
-            result = debitCardPayment.makePayment(paymentDTO);
-        } else if (cardType.equals(CardType.GIFT_CARD)) {
-            result = giftCardPayment.makePayment(paymentDTO);
-        } else if (cardType.equals(CardType.PAYPAL)) {
-            result = payPalPayment.makePayment(paymentDTO);
-        }
-
-        /*Posibilidad 2 - lo que normalmente haríamos*/
-        switch (cardType) {
-            case CREDIT_CARD:
-                result = creditCardPayment.makePayment(paymentDTO);
-            case DEBIT_CARD:
-                result = debitCardPayment.makePayment(paymentDTO);
-            case GIFT_CARD:
-                result = giftCardPayment.makePayment(paymentDTO);
-            case PAYPAL:
-                result = payPalPayment.makePayment(paymentDTO);
-        }
-
+//
+//        /*Posibilidad 1 - lo que normalmente haríamos*/
+//        if (cardType.equals(CardType.CREDIT_CARD)) {
+//            result = creditCardPayment.makePayment(paymentDTO);
+//        } else if (cardType.equals(CardType.DEBIT_CARD)) {
+//            result = debitCardPayment.makePayment(paymentDTO);
+//        } else if (cardType.equals(CardType.GIFT_CARD)) {
+//            result = giftCardPayment.makePayment(paymentDTO);
+//        } else if (cardType.equals(CardType.PAYPAL)) {
+//            result = payPalPayment.makePayment(paymentDTO);
+//        }
+//
+//        /*Posibilidad 2 - lo que normalmente haríamos*/
+//        switch (cardType) {
+//            case CREDIT_CARD:
+//                result = creditCardPayment.makePayment(paymentDTO);
+//            case DEBIT_CARD:
+//                result = debitCardPayment.makePayment(paymentDTO);
+//            case GIFT_CARD:
+//                result = giftCardPayment.makePayment(paymentDTO);
+//            case PAYPAL:
+//                result = payPalPayment.makePayment(paymentDTO);
+//        }
+        /*Factory*/
+        PaymentService paymentMethod = PaymentFactory.getPaymentMethod(paymentDTO.getCardType());
+        result = paymentMethod.makePayment(paymentDTO);
 
         return ResponseEntity.ok().body(result);
     }
